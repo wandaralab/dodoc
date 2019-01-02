@@ -43,7 +43,8 @@ export default {
       ],
 
       socket: null,
-      connection_state: undefined
+      connection_state: undefined,
+      requested_resource_url: undefined
     }
   },
   
@@ -75,6 +76,9 @@ export default {
   },
   methods: {
     initWebsocketMode() {
+      if(!this.$root.state.hasOwnProperty('text_collaboration_websocket_port') || !this.$root.state.text_collaboration_websocket_port) 
+        return;
+
       const params = new URLSearchParams({
         'type': 'projects',
         'slugFolderName': this.slugFolderName,
@@ -82,11 +86,18 @@ export default {
       });
 
       const requested_querystring = '?' + params.toString();
-      const requested_resource_url = `ws://${window.location.hostname}:8079` + requested_querystring;
+      this.requested_resource_url = 
+        'ws'
+        + '://'
+        + window.location.hostname
+        + `:${this.$root.state.text_collaboration_websocket_port}` 
+        + '/sharedb'
+        + requested_querystring
+      ;
 
-      console.log(`MOUNTED • CollaborativeEditor: will connect to ws server with ${requested_resource_url}`);
+      console.log(`MOUNTED • CollaborativeEditor: will connect to ws server with ${this.requested_resource_url}`);
 
-      this.socket = new ReconnectingWebSocket(requested_resource_url);
+      this.socket = new ReconnectingWebSocket(this.requested_resource_url);
       const connection = new ShareDB.Connection(this.socket);
       connection.on('state', this.wsState);
 
