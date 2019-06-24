@@ -360,6 +360,13 @@ export default {
   </g>
 </svg>          
           `
+        },
+        { 
+          key: 'drawing_pad',
+          instructions: 'drawing_pad_instructions',
+          show_all_recipes: false,
+          icon: `
+          `
         }
       ]
     }
