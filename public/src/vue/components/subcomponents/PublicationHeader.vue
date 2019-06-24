@@ -62,7 +62,7 @@ export default {
   props: {
     slugPubliName: String,
     publication: Object,
-    publication_medias: Array,
+    publication_medias: [Array, Object],
     number_of_medias_required: {
       type: Number,
       default: -1
@@ -88,14 +88,19 @@ export default {
   },
   computed: {
     export_button_is_disabled() {
-      if(Object.values(this.publication_medias).length <= 1) return true;
+      if(Array.isArray(this.publication_medias)) {
+        if(Object.values(this.publication_medias).length <= 1) return true;
 
-      if(
-        this.number_of_medias_required !== -1
-        && Object.values(this.publication_medias).length !== this.number_of_medias_required
-      ) 
-        return true;
-
+        if(
+          this.number_of_medias_required !== -1
+          && Object.values(this.publication_medias).length !== this.number_of_medias_required
+        ) 
+          return true;
+      } else 
+      if(typeof this.publication_medias === 'object') {
+        // check if object contains array with length >= 1
+        // for paged and drawing publication
+      }
       return false;
     }
   },

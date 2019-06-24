@@ -19,6 +19,7 @@
     >
     </ExportModal>
 
+
     <div class="m_publicationview--settings">
 
       <div class=""
@@ -646,7 +647,7 @@ export default {
 
 
       if(!this.publication.hasOwnProperty('medias') || Object.keys(this.publication.medias).length === 0) {
-        this.publication_medias = [];        
+        this.publication_medias = {};        
         return;
       }
       

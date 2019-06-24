@@ -29,33 +29,6 @@
       </div>
 
       <template v-if="advanced_options" >
-        <hr>
-        <div class="margin-bottom-small">
-          <label>{{ $t('template') }}</label>
-          <select v-model="new_style" @change="updatePublicationOption($event, 'style')">
-            <option value="standard">
-              standard
-            </option>
-            <!-- <option value="feuille de choux">
-              feuille de choux
-            </option>
-            <option value="human tech days">
-              human tech days
-            </option> -->
-          </select>
-        </div>
-
-        <hr>        
-
-        <div class="margin-bottom-small">
-          <label>{{ $t('header_left') }}</label>
-          <input class="input-large" type="text" v-model="new_header_left" @change="updatePublicationOption($event, 'header_left')" :readonly="read_only">
-        </div>
-
-        <div class="margin-bottom-small">
-          <label>{{ $t('header_right') }}</label>
-          <input class="input-large" type="text" v-model="new_header_right" @change="updatePublicationOption($event, 'header_right')" :readonly="read_only">
-        </div>
 
         <hr>
 
@@ -72,32 +45,6 @@
         <div class="margin-bottom-small">
           <label>{{ $t('gridstep') }}(mm)</label>
           <input type="number" min="2" max="100" step="1" v-model="new_gridstep" @input="updatePublicationOption($event, 'gridstep')">
-        </div>
-
-        <hr>
-
-        <div class="margin-bottom-small">
-          <label>{{ $t('margin_top') }}(mm)</label>
-          <input type="number" min="0" max="100" step="1" v-model="new_margin_top" @input="updatePublicationOption($event, 'margin_top')">
-        </div>
-        <div class="margin-bottom-small">
-          <label>{{ $t('margin_bottom') }}(mm)</label>
-          <input type="number" min="0" max="100" step="1" v-model="new_margin_bottom" @input="updatePublicationOption($event, 'margin_bottom')">
-        </div>
-        <div class="margin-bottom-small">
-          <label>{{ $t('margin_left') }}(mm)</label>
-          <input type="number" min="0" max="100" step="1" v-model="new_margin_left" @input="updatePublicationOption($event, 'margin_left')">
-        </div>
-        <div class="margin-bottom-small">
-          <label>{{ $t('margin_right') }}(mm)</label>
-          <input type="number" min="0" max="100" step="1" v-model="new_margin_right" @input="updatePublicationOption($event, 'margin_right')">
-        </div>
-
-        <hr>
-
-        <div class="margin-bottom-small">
-          <label for="show_page_number">{{ $t('show_page_numbers') }}(mm)</label>
-          <input id="show_page_number" type="checkbox" v-model="new_show_page_number" @change="updatePublicationOption(new_show_page_number, 'show_page_number')">
         </div>
 
       </template>
@@ -228,12 +175,12 @@
           v-for="(page, pageNumber) in pagesWithDefault" 
           :key="page.id"
         >
-          <div class="m_publicationFooter"
+          <div class="m_publicationFooter margin-top-medium"
             v-if="$root.state.mode !== 'export_publication' && pageNumber === 0"   
           >
-            <button type="button" class="buttonLink" @click="insertPageAtIndex(pageNumber)">
+            <!-- <button type="button" class="buttonLink" @click="insertPageAtIndex(pageNumber)">
               {{ $t('add_a_page_before') }}
-            </button>
+            </button> -->
           </div>
 
           <div 
@@ -272,14 +219,6 @@
                 </div>
               </div>        
 
-              <div 
-                v-if="!page.hasOwnProperty('show_page_number') || page.show_page_number"
-                class="m_page--pageNumber"
-                :class="{ 'toRight' : true }"
-              >
-                {{ pageNumber + 1 }}
-              </div>
-
               <transition-group name="slideFromTop" :duration="300" tag="div">
                 <div
                   v-for="media in publication_medias[(pageNumber) + '']" 
@@ -291,6 +230,7 @@
                     :preview_mode="preview_mode"
                     :read_only="read_only"
                     :pixelsPerMillimeters="pixelsPerMillimeters"
+                    :hide_caption="true"
                     @removePubliMedia="values => { removePubliMedia(values) }"
                     @editPubliMedia="values => { editPubliMedia(values) }"
                     @unselected="noSelection"
@@ -303,12 +243,12 @@
           <div class="m_publicationFooter"
             v-if="$root.state.mode !== 'export_publication'"   
           >
-            <button type="button" class="buttonLink" @click="insertPageAtIndex(pageNumber + 1)">
+            <!-- <button type="button" class="buttonLink" @click="insertPageAtIndex(pageNumber + 1)">
               {{ $t('add_a_page_here') }}
             </button>
             <button type="button" class="buttonLink" @click="removePageAtIndex(pageNumber)">
               {{ $t('remove_this_page') }}
-            </button>
+            </button> -->
           </div>
           
         </div>
@@ -317,9 +257,9 @@
       <div class="m_publicationFooter"
         v-if="$root.state.mode !== 'export_publication' && pagesWithDefault.length === 0"        
       >
-        <button type="button" class="buttonLink" @click="insertPageAtIndex(pageNumber + 1)">
+        <!-- <button type="button" class="buttonLink" @click="insertPageAtIndex(pageNumber + 1)">
           {{ $t('add_a_page') }}
-        </button>
+        </button> -->
       </div>
 
     </div>
@@ -368,20 +308,16 @@ export default {
   },
   data() {
     return {
-      publication_medias: {},
+      publication_medias: [],
       publication_defaults: {
-        'page_by_page': {
-          width: 210,
-          height: 297,      
-          style: 'standard',
-          margin_left: 10,
-          margin_right: 10,
-          margin_top: 20,
-          margin_bottom: 20,
-          gridstep: 10,
-          header_left: '',
-          header_right: '',
-          show_page_number: true 
+        'drawing_pad': {
+          width: 297,
+          height: 210,      
+          margin_left: 0,
+          margin_right: 0,
+          margin_top: 0,
+          margin_bottom: 0,
+          gridstep: 1
         }
       },
 
@@ -391,16 +327,7 @@ export default {
 
       new_width: 0,
       new_height: 0,
-      new_template: '',
-      new_style: '',
       new_gridstep: 0,
-      new_margin_left: 0,
-      new_margin_top: 0,
-      new_margin_right: 0,
-      new_margin_bottom: 0,
-      new_header_left: '',
-      new_header_right: '',
-      new_show_page_number: false,
 
       page_currently_active: 0,
       preview_mode: this.$root.state.mode !== 'live',
@@ -414,7 +341,7 @@ export default {
       has_media_selected: false,
       show_export_modal: false,
 
-      accepted_media_type: ["image", "video", "audio", "text", "document", "other"]
+      accepted_media_type: ["image", "text"]
     }
   },
   created() {
@@ -492,7 +419,6 @@ export default {
       }
       // set default values to options
       if(!this.publication.hasOwnProperty('template')) {
-
         this.$alertify
           .closeLogOnClick(true)
           .delay(4000)

@@ -27,7 +27,10 @@
       v-model="media.content"
       :style="media.publi_meta.custom_css"
     />
-    <p class="mediaCaption">{{ media.caption }}</p>
+    <p 
+      v-if="!hide_caption"
+      class="mediaCaption"
+    >{{ media.caption }}</p>
 
     <button class="m_mediaPublication--overflowing_sign"
       type="button"
@@ -207,6 +210,10 @@ export default {
     read_only: Boolean,
     preview_mode: Boolean,
     pixelsPerMillimeters: Number,
+    hide_caption: {
+      type: Boolean,
+      default: false
+    }
   },
   components: {
     MediaContent,

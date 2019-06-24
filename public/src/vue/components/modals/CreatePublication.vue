@@ -139,6 +139,13 @@ export default {
         }];
         publidata.width = 210;
         publidata.height = 297;
+      } else
+      if(publidata.template === 'drawing_pad') {
+        publidata.pages = [{
+          id: +new Date() + '_' + (Math.random().toString(36) + '00000000000000000').slice(2, 3)
+        }];
+        publidata.width = 297;
+        publidata.height = 210;
       }
 
       this.$eventHub.$on('socketio.folder_created_or_updated', this.newPublicationCreated);
